@@ -1,4 +1,4 @@
-require 'sudoku' # FIXME: 'matrix'
+require 'architest'
 
 # Knows how to solve sudoku.
 #
@@ -17,11 +17,12 @@ class Solver
   # solved matrix
   #
   def solution
+    @matrix
   end
 
 end
 
 if $0 == __FILE__
-  matrix = Matrix.new(STDIN)
+  matrix = Architect.new(STDIN)
   puts Solver.new(matrix).solution
 end
