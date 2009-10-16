@@ -24,8 +24,10 @@ class Cell
     end
   end
 
+  # All initial/immutable values are 'valid'.
+  #
   def valid?
-    valid_val? and valid_in_row? and valid_in_col? and valid_in_grid?
+    @val_immutable or (valid_val? and valid_in_row? and valid_in_col? and valid_in_grid?)
   end
 
   def val=(raw)
@@ -59,3 +61,20 @@ private
 
 end
 
+
+if $0 == __FILE__
+  require 'test/unit'
+
+  class TestCell < Test::Unit::TestCase
+    def setup
+      @row = []
+      @col = []
+      @grid = []
+    end
+    def test_initial_val
+      @cell = Cell.new(1, 1, @col, @row, @grid, 1234)
+      assert @cell.valid?, "cell is valid when initialized w/ a value"
+    end
+  end
+
+end
