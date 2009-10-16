@@ -1,12 +1,8 @@
 #!/usr/bin/ruby
 
-# randori sudoku 2009-10-14 -- Reno.rb
+# Matrix is the entire puzzle.
 #
-# partial design notes from late-night whiteboard
-#
-# grids works now
-
-class Matrix
+class Matrix # TODO: split to separate file
 
   attr_reader :grid_size
 
@@ -37,8 +33,7 @@ class Matrix
       return c
     end
 
-    c = Cell.new(x, y, @cols[x], @rows[y], @grids[x/grid_size][y/grid_size])
-    c.val = val unless val.nil?
+    c = Cell.new(x, y, @cols[x], @rows[y], @grids[x/grid_size][y/grid_size], val)
     @matrix[x][y] = c
 
     c
@@ -57,22 +52,37 @@ class Matrix
 
 end
 
+# TODO: split to separate file
 class Cell #########################
 
   attr_accessor :val
   attr_reader :x, :y, :col, :row, :grid
+  # list of current possibilities for this cell
+  attr_reader :pencils
+  attr_reader :pens # opposite of pencils (known impossibilities)
 
-  def initialize(x, y, col, row, grid)
+  # If a +val+ is passed on initialization, consider it immutable.
+  #
+  def initialize(x, y, col, row, grid, val=nil)
     @x = x; @y = y
     @col = col; @row = row; @grid = grid
 
     @col << self
     @row << self
     @grid << self
+    unless val.nil?
+      @val = val
+      @val_immutable = true
+    end
   end
 
   def valid?
-    valid_in_row? and valid_in_col? and valid_in_grid?
+    valid_val? and valid_in_row? and valid_in_col? and valid_in_grid?
+  end
+
+  def val=(raw)
+    fail if @val_immutable
+    @val = raw
   end
 
   def to_s
@@ -80,6 +90,10 @@ class Cell #########################
   end
 
 private
+  def valid_val?
+    @val =~ /\d+/
+  end
+
   def valid_in_row?
     uniq_in?(row)
   end
