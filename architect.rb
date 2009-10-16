@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'sudoku' # FIXME: 'matrix'
+require 'matrix'
 
 # Architect knows how to construct the Matrix.
 #
