@@ -55,3 +55,23 @@ module Sudoku
   end
 
 end
+
+if $0 == __FILE__
+  require 'test/unit'
+
+  class TestMatrix < Test::Unit::TestCase
+    def test_grid_size_3
+      matrix = Sudoku::Matrix.new(3)
+      assert_equal 3, matrix.grid_size
+    end
+    def test_grid_size_9
+      matrix = Sudoku::Matrix.new(9)
+      assert_equal 3, matrix.grid_size
+    end
+    def test_grid_size_25
+      matrix = Sudoku::Matrix.new(25)
+      assert_equal 5, matrix.grid_size
+    end
+  end
+
+end
