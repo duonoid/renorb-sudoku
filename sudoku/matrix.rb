@@ -37,7 +37,9 @@ module Sudoku
         return c
       end
 
-      c = Sudoku::Cell.new(x, y, @cols[x], @rows[y], @grids[x/grid_size][y/grid_size], val)
+      c = Sudoku::Cell.new(x, y, @cols[x], @rows[y],
+                           @grids[(x/grid_size).to_i][(y/grid_size).to_i],
+                           val)
       @matrix[x][y] = c
       @cells << c
 
