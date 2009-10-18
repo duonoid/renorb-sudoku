@@ -23,8 +23,8 @@ module Sudoku
 
       @val_immutable = false
       unless val.nil?
-        @val = val
-        @val_immutable = true
+        @val = val.to_s
+        @val_immutable = true if valid_val?
       end
     end
 
@@ -46,7 +46,7 @@ module Sudoku
   private
 
     def valid_val?
-      @val =~ /\d+/
+      @val =~ /\d+/ # TODO: grids > 9 sometimes use letters
     end
 
     def valid_in_row?
@@ -77,6 +77,7 @@ if $0 == __FILE__
   require 'test/unit'
 
   class TestCell < Test::Unit::TestCase
+    include Sudoku
     def setup
       @row = []
       @col = []
@@ -90,6 +91,10 @@ if $0 == __FILE__
     def test_initial_val
       @cell = Cell.new(0, 1, @col, @row, @grid, 1234)
       assert @cell.valid?, "cell is valid when initialized w/ a value"
+    end
+    def test_mutable_val
+      @cell = Cell.new(0, 1, @col, @row, @grid, '.')
+      assert !@cell.valid?, "cell isn't valid w/o valid char"
     end
     def test_invalid_val_in_row
       @cell = Cell.new(0, 1, @col, @row, @grid)
