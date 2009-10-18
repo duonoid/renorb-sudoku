@@ -7,6 +7,7 @@ module Sudoku
   class Matrix
 
     attr_reader :grid_size
+    attr_reader :cells
 
     def initialize(matrix_width=9)
       if matrix_width == 3
@@ -21,6 +22,7 @@ module Sudoku
       @grids = Hash.new do |h, k|
         h[k] = Hash.new {|h2, k2| h2[k2] = Array.new }
       end
+      @cells = []
     end
 
     # Creates or returns an existing Cell.
@@ -37,6 +39,7 @@ module Sudoku
 
       c = Sudoku::Cell.new(x, y, @cols[x], @rows[y], @grids[x/grid_size][y/grid_size], val)
       @matrix[x][y] = c
+      @cells << c
 
       c
     end
@@ -60,6 +63,10 @@ if $0 == __FILE__
   require 'test/unit'
 
   class TestMatrix < Test::Unit::TestCase
+    include Sudoku
+    def setup
+      @matrix = Matrix.new(3)
+    end
     def test_grid_size_3
       matrix = Sudoku::Matrix.new(3)
       assert_equal 3, matrix.grid_size
@@ -71,6 +78,10 @@ if $0 == __FILE__
     def test_grid_size_25
       matrix = Sudoku::Matrix.new(25)
       assert_equal 5, matrix.grid_size
+    end
+    def test_cells_method
+      @matrix.cell(0, 0)
+      assert_equal 1, @matrix.cells.size
     end
   end
 
