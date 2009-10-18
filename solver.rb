@@ -1,28 +1,22 @@
-require 'architest'
+require 'sudoku/architect'
 
 # Knows how to solve sudoku.
 #
-class Solver
-
-  attr_reader :matrix
-
-  # ==== Params
-  # +matrix_to_solve+ pre-initialized matrix
-  #
-  def initialize(matrix_to_solve)
-    @matrix = matrix_to_solve
-  end
+module Solver
 
   # ==== Returns
   # solved matrix
   #
-  def solution
-    @matrix
+  def solve(matrix_to_solve)
+    matrix_to_solve
   end
+  module_function :solve
 
 end
 
 if $0 == __FILE__
-  matrix = Architect.new(STDIN)
-  puts Solver.new(matrix).solution
+  include Sudoku
+
+  matrix = Architect.matrix(STDIN)
+  puts Solver.solve(matrix)
 end
