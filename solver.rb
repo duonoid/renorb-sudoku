@@ -52,7 +52,10 @@ module PencilMethod
         if min_solution_size > 1
           $stderr.puts "*** WARNING: minimum solution size: #{min_solution_size}" # TODO: branch point: multiple solutions possible
           branches = unsolved_cells.collect do |cell|
-            next cell if cell.possible_vals.size == min_solution_size
+            if cell.possible_vals.size == min_solution_size
+              $stderr.puts "[#{cell.x}, #{cell.y}] possible: #{cell.possible_vals.join(',')}]"
+              next cell
+            end
           end.compact
           $stderr.puts "  trying ambiguous solution"
           branches.first.val = branches.first.possible_vals.first
@@ -98,7 +101,12 @@ module PencilMethod
       @possible_vals
     end
     def solved?
-      possible_vals.size == 1
+      if possible_vals.size == 1
+        @val = possible_vals.first.to_s
+        return true
+      end
+
+      false
     end
   end
 end
