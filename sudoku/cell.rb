@@ -39,9 +39,11 @@ module Sudoku
       when !valid_val?
         "invalid value: #{val.inspect}"
       when !valid_in_row?
-        "invalid in row"
+        "invalid in row: #{row.collect {|c| c.val }.join(',')}"
       when !valid_in_col?
-        "invalid_in_col"
+        "invalid in col: #{col.collect {|c| c.val }.join(',')}"
+      when !valid_in_grid?
+        "invalid in grid: #{grid.collect {|c| c.val }.join(',')}"
       end
     end
 
@@ -59,7 +61,9 @@ module Sudoku
     end
 
     def to_s
-      "{x:#{@x}; y:#{@y}; val:#{val}}"
+      return "{x:#{@x}; y:#{@y}; val:#{val}}" if $VERBOSE
+
+      val
     end
 
   private

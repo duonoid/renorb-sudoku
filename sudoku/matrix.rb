@@ -6,14 +6,15 @@ module Sudoku
   #
   class Matrix
 
-    attr_reader :grid_size
+    attr_reader :grid_size, :width
     attr_reader :cells
 
     def initialize(matrix_width=9)
+      @width = matrix_width
       if matrix_width == 3
         @grid_size = 3
       else
-        @grid_size = Math.sqrt(matrix_width) # TODO: fail if not an even square
+        @grid_size = Math.sqrt(matrix_width).to_i # TODO: fail if not an even square
       end
 
       @matrix = Hash.new {|hash, key| hash[key] = Hash.new }
@@ -49,6 +50,7 @@ module Sudoku
     def to_s
       @grids.each_key do |k|
         @grids[k].each_key do |k2|
+          puts
           puts "grid: #{k2}:#{k}"
           print @grids[k2][k] # works by side-effect of being square...
           print " "
