@@ -1,2 +1,5 @@
 
 cat test_matrix.txt | ./architect.rb
+
+
+$ cat test_matrix_9.txt | ruby solver.rb
