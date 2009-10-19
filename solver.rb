@@ -17,8 +17,7 @@ module PencilMethod
           cell.try_val val
           if $VERBOSE
             $stderr.print"[#{cell.x}, #{cell.y}] trying value: #{val} ... "
-            $stderr.print (cell.was_valid? ? "valid! current possibilities: #{cell.possible_vals.inspect}" : "invalid: #{cell.last_reason}")
-            $stderr.puts
+            $stderr.puts (cell.was_valid? ? "valid! current possibilities: #{cell.possible_vals.inspect}" : "invalid: #{cell.last_reason}")
             sleep 0.1
           end
         end
@@ -27,11 +26,14 @@ module PencilMethod
       # iteration
       loop do
         break if unsolved_cells.size == 0
+
+        min_solution_size = width
+
         unsolved_cells.each do |cell|
           $stderr.print "solving [#{cell.x}, #{cell.y}] ... checking:"
           cell.possible_vals.each do |poss_val|
-            $stderr.print " #{poss_val}(#{cell.was_valid? ? 'valid' : cell.last_reason})"
             cell.try_val poss_val
+            $stderr.print " #{poss_val}(#{cell.was_valid? ? 'valid' : cell.last_reason})"
           end
           $stderr.puts " current possibilities: #{cell.possible_vals.inspect}"
 
@@ -40,7 +42,21 @@ module PencilMethod
             $stderr.puts "**** [#{cell.x}, #{cell.y}] solved!  value: #{cell.val}"
             cell.done!
           end
+
+          pvsize = cell.possible_vals.size
+          if pvsize > 0 && pvsize < min_solution_size
+            min_solution_size = pvsize
+          end
           sleep 0.1
+        end
+        if min_solution_size > 1
+          $stderr.puts "*** WARNING: minimum solution size: #{min_solution_size}" # TODO: branch point: multiple solutions possible
+          branches = unsolved_cells.collect do |cell|
+            next cell if cell.possible_vals.size == min_solution_size
+          end.compact
+          $stderr.puts "  trying ambiguous solution"
+          branches.first.val = branches.first.possible_vals.first
+          branches.first.possible_vals.delete branches.first.val
         end
       end
     end
