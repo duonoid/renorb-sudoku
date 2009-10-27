@@ -30,12 +30,12 @@ module PencilMethod
         min_solution_size = width
 
         unsolved_cells.each do |cell|
-          $stderr.print "solving [#{cell.x}, #{cell.y}] ... checking:"
+          $stderr.print "solving [#{cell.x}, #{cell.y}] ... checking:" if $VERBOSE
           cell.possible_vals.each do |poss_val|
             cell.try_val poss_val
-            $stderr.print " #{poss_val}(#{cell.was_valid? ? 'valid' : cell.last_reason})"
+            $stderr.print " #{poss_val}(#{cell.was_valid? ? 'valid' : cell.last_reason})" if $VERBOSE
           end
-          $stderr.puts " current possibilities: #{cell.possible_vals.inspect}"
+          $stderr.puts " current possibilities: #{cell.possible_vals.inspect}" if $VERBOSE
 
           if cell.solved?
             cell.val = cell.possible_vals.first
@@ -47,7 +47,8 @@ module PencilMethod
           if pvsize > 0 && pvsize < min_solution_size
             min_solution_size = pvsize
           end
-          sleep 0.1
+
+          sleep 0.1 if $VERBOSE
         end
         if min_solution_size > 1
           $stderr.puts "*** WARNING: minimum solution size: #{min_solution_size}" # TODO: branch point: multiple solutions possible
